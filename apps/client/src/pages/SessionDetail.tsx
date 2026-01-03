@@ -34,7 +34,7 @@ interface SessionDetailProps {
 
 export default function SessionDetail({
   onBack,
-  sessionId,
+  // sessionId,
 }: SessionDetailProps) {
   const [micOn, setMicOn] = useState(true);
   const [videoOn, setVideoOn] = useState(true);
