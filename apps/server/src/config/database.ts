@@ -8,6 +8,9 @@ export const pool = new Pool({
   password: process.env.DATABASE_PASSWORD || "postgres",
 });
 
+import fs from "fs";
+import path from "path";
+
 export const connectDB = async () => {
   console.log("[server] 🔄 Connecting to database...");
   console.log(
@@ -17,6 +20,11 @@ export const connectDB = async () => {
   try {
     await pool.connect();
     console.log("[server] ✅ Database connected successfully");
+
+    // Initialize schema in development
+    if (process.env.NODE_ENV !== "production") {
+      await initSchema();
+    }
   } catch (error) {
     console.error("[server] ❌ Database connection failed:", error);
     console.error(
@@ -25,6 +33,17 @@ export const connectDB = async () => {
     console.error(
       "[server] ⚠️  Server will start without database. Database-dependent features will not work."
     );
+  }
+};
+
+const initSchema = async () => {
+  try {
+    const schemaPath = path.join(__dirname, "schema.sql");
+    const schema = fs.readFileSync(schemaPath, "utf8");
+    await pool.query(schema);
+    console.log("[server] 🛠️  Database schema initialized");
+  } catch (error) {
+    console.error("[server] ❌ Failed to initialize schema:", error);
   }
 };
 

@@ -14,8 +14,15 @@ import { requestLogger } from "./middleware/requestLogger";
 console.log("[server] 🚀 Starting Talent IQ Server...");
 console.log("[server] 🌍 NODE_ENV:", process.env.NODE_ENV || "development");
 
+import { createServer } from "http";
+import { setupSocket } from "./config/socket";
+
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 3001;
+
+// Setup Socket.io
+setupSocket(httpServer);
 
 app.use(helmet());
 app.use(
@@ -36,7 +43,7 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`[server] 🚀 Server running on port ${PORT}`);
       console.log(`[server] 📡 API available at http://localhost:${PORT}/api`);
       console.log(`[server] 🔒 CORS origin: ${process.env.CORS_ORIGIN}`);
