@@ -21,28 +21,54 @@ export function SiteHeader() {
   const location = useLocation();
 
   const getBreadcrumbs = () => {
-    const currentRoute = ROUTES.find(route => {
-      if (route.path === location.pathname) return true;
-      if (route.path.includes(":id")) {
-        const basePath = route.path.split("/:id")[0];
-        return location.pathname.startsWith(basePath);
-      }
-      return false;
-    });
-
-    if (!currentRoute) return null;
-
+    const pathnames = location.pathname.split("/").filter(x => x);
     const items: { label: string; href?: string }[] = [
       { label: t("sidebar.home"), href: "/" },
     ];
 
-    if (currentRoute.path !== "/") {
-      items.push({
-        label: t(
-          `sidebar.${currentRoute.path.replace("/", "").replace("/", "_")}`
-        ),
+    let currentPath = "";
+    pathnames.forEach((pathname, index) => {
+      currentPath += `/${pathname}`;
+      const isLast = index === pathnames.length - 1;
+
+      // Find if this path matches a route (handling dynamic segments)
+      const route = ROUTES.find(r => {
+        if (r.path === currentPath) return true;
+
+        // Handle dynamic route matching (e.g. /problem/:id)
+        const routeParts = r.path.split("/").filter(x => x);
+        const pathParts = currentPath.split("/").filter(x => x);
+
+        if (routeParts.length !== pathParts.length) return false;
+
+        return routeParts.every(
+          (part, i) => part.startsWith(":") || part === pathParts[i]
+        );
       });
-    }
+
+      if (route) {
+        // Map route path to translation key
+        // e.g. /problem -> problems
+        // e.g. /dashboard -> dashboard
+        // e.g. /problem/:id -> problemDetail.title
+        let labelKey = "";
+        if (route.path === "/problem") labelKey = "sidebar.problems";
+        else if (route.path.includes(":id"))
+          labelKey = "pages.problemDetail.title";
+        else labelKey = `sidebar.${pathname}`;
+
+        items.push({
+          label: t(labelKey),
+          href: isLast ? undefined : currentPath,
+        });
+      } else if (!isLast) {
+        // If we don't have a direct route match but it's middle segment
+        items.push({
+          label: pathname.charAt(0).toUpperCase() + pathname.slice(1),
+          href: currentPath,
+        });
+      }
+    });
 
     return items;
   };
