@@ -37,7 +37,6 @@ function LoginPage() {
 
     try {
       const response = await authService.login({ email, password });
-      console.log("Login Success:", response);
 
       if (response.user) {
         dispatch(setCredentials({ user: response.user }));
