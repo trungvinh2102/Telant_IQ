@@ -13,6 +13,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -28,9 +29,10 @@ import { Separator } from "@/components/ui/separator";
 export default function Session() {
   const [micOn, setMicOn] = useState(true);
   const [videoOn, setVideoOn] = useState(true);
+  const { t } = useTranslation();
 
   return (
-    <div className="h-[calc(100vh-4rem)] w-full bg-[#0a0a0a] text-white overflow-hidden flex flex-col">
+    <div className="h-[calc(100vh-4rem)] w-full bg-background text-foreground overflow-hidden flex flex-col">
       {/* Top Bar - Simplified for Session specific actions if needed, otherwise rely on MainLayout header */}
       {/* Assuming MainLayout header is present, but we might want a session specific sub-header or just the content */}
 
@@ -39,12 +41,12 @@ export default function Session() {
         <ResizablePanel
           defaultSize={25}
           minSize={20}
-          className="bg-[#111111] border-r border-gray-800"
+          className="border-r bg-card border-border"
         >
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+            <div className="flex items-center justify-between p-4 border-b border-border">
               <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-6 h-6 text-xs font-bold text-green-500 rounded bg-green-500/20">
+                <div className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded text-primary bg-primary/20">
                   <Code2 size={14} />
                 </div>
                 <span className="font-semibold">Two Sum</span>
@@ -52,9 +54,9 @@ export default function Session() {
               <div className="flex gap-2">
                 <Badge
                   variant="outline"
-                  className="text-green-500 border-green-500/20 bg-green-500/10 hover:bg-green-500/20"
+                  className="text-primary border-primary/20 bg-primary/10 hover:bg-primary/20"
                 >
-                  Easy
+                  {t("pages.session.problemPanel.difficulty.easy")}
                 </Badge>
               </div>
             </div>
@@ -62,14 +64,16 @@ export default function Session() {
             <ScrollArea className="flex-1">
               <div className="p-6 space-y-6">
                 <div>
-                  <h2 className="mb-2 text-xl font-bold">Description</h2>
-                  <div className="bg-[#1a1a1a] p-4 rounded-lg border border-gray-800 text-sm text-gray-300 leading-relaxed">
+                  <h2 className="mb-2 text-xl font-bold">
+                    {t("pages.session.problemPanel.description")}
+                  </h2>
+                  <div className="p-4 text-sm leading-relaxed border rounded-lg bg-muted border-border text-muted-foreground">
                     <p>
                       Given an array of integers{" "}
-                      <code className="text-green-400">nums</code> and an
-                      integer <code className="text-green-400">target</code>,
-                      return indices of the two numbers such that they add up to{" "}
-                      <code className="text-green-400">target</code>.
+                      <code className="text-primary">nums</code> and an integer{" "}
+                      <code className="text-primary">target</code>, return
+                      indices of the two numbers such that they add up to{" "}
+                      <code className="text-primary">target</code>.
                     </p>
                     <p className="mt-2">
                       You may assume that each input would have{" "}
@@ -83,46 +87,50 @@ export default function Session() {
                 </div>
 
                 <div>
-                  <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-400 uppercase">
-                    Examples
+                  <h3 className="mb-3 text-sm font-semibold tracking-wider uppercase text-muted-foreground">
+                    {t("pages.session.problemPanel.examples")}
                   </h3>
                   <div className="space-y-4">
-                    <div className="bg-[#1a1a1a] p-3 rounded-md border border-gray-800 text-sm">
-                      <div className="mb-1 font-medium text-white">
-                        Example 1:
+                    <div className="p-3 text-sm border rounded-md bg-muted border-border">
+                      <div className="mb-1 font-medium text-foreground">
+                        {t("pages.session.problemPanel.example")} 1:
                       </div>
-                      <div className="pl-2 border-l-2 border-green-500/30">
-                        <div className="text-gray-400">
-                          Input:{" "}
-                          <span className="font-mono text-gray-200">
+                      <div className="pl-2 border-l-2 border-primary/30">
+                        <div className="text-muted-foreground">
+                          {t("pages.session.problemPanel.input")}:{" "}
+                          <span className="font-mono text-foreground">
                             nums = [2,7,11,15], target = 9
                           </span>
                         </div>
-                        <div className="text-gray-400">
-                          Output:{" "}
-                          <span className="font-mono text-gray-200">[0,1]</span>
+                        <div className="text-muted-foreground">
+                          {t("pages.session.problemPanel.output")}:{" "}
+                          <span className="font-mono text-foreground">
+                            [0,1]
+                          </span>
                         </div>
-                        <div className="mt-1 text-xs text-gray-500">
-                          Explanation: Because nums[0] + nums[1] == 9, we return
-                          [0, 1].
+                        <div className="mt-1 text-xs text-muted-foreground">
+                          {t("pages.session.problemPanel.explanation")}: Because
+                          nums[0] + nums[1] == 9, we return [0, 1].
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-[#1a1a1a] p-3 rounded-md border border-gray-800 text-sm">
-                      <div className="mb-1 font-medium text-white">
-                        Example 2:
+                    <div className="p-3 text-sm border rounded-md bg-muted border-border">
+                      <div className="mb-1 font-medium text-foreground">
+                        {t("pages.session.problemPanel.example")} 2:
                       </div>
-                      <div className="pl-2 border-l-2 border-green-500/30">
-                        <div className="text-gray-400">
-                          Input:{" "}
-                          <span className="font-mono text-gray-200">
+                      <div className="pl-2 border-l-2 border-primary/30">
+                        <div className="text-muted-foreground">
+                          {t("pages.session.problemPanel.input")}:{" "}
+                          <span className="font-mono text-foreground">
                             nums = [3,2,4], target = 6
                           </span>
                         </div>
-                        <div className="text-gray-400">
-                          Output:{" "}
-                          <span className="font-mono text-gray-200">[1,2]</span>
+                        <div className="text-muted-foreground">
+                          {t("pages.session.problemPanel.output")}:{" "}
+                          <span className="font-mono text-foreground">
+                            [1,2]
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -130,22 +138,22 @@ export default function Session() {
                 </div>
 
                 <div>
-                  <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-400 uppercase">
-                    Constraints
+                  <h3 className="mb-3 text-sm font-semibold tracking-wider uppercase text-muted-foreground">
+                    {t("pages.session.problemPanel.constraints")}
                   </h3>
-                  <ul className="pl-5 space-y-1 text-sm text-gray-300 list-disc marker:text-gray-600">
+                  <ul className="pl-5 space-y-1 text-sm list-disc text-muted-foreground marker:text-muted-foreground/50">
                     <li>
-                      <code className="px-1 text-xs bg-gray-800 rounded">
+                      <code className="px-1 text-xs rounded bg-muted">
                         2 &lt;= nums.length &lt;= 10^4
                       </code>
                     </li>
                     <li>
-                      <code className="px-1 text-xs bg-gray-800 rounded">
+                      <code className="px-1 text-xs rounded bg-muted">
                         -10^9 &lt;= nums[i] &lt;= 10^9
                       </code>
                     </li>
                     <li>
-                      <code className="px-1 text-xs bg-gray-800 rounded">
+                      <code className="px-1 text-xs rounded bg-muted">
                         -10^9 &lt;= target &lt;= 10^9
                       </code>
                     </li>
@@ -156,21 +164,21 @@ export default function Session() {
           </div>
         </ResizablePanel>
 
-        <ResizableHandle className="bg-gray-800 w-[1px]" />
+        <ResizableHandle className="bg-border w-[1px]" />
 
         {/* MIDDLE PANEL: CODE EDITOR */}
         <ResizablePanel
           defaultSize={50}
           minSize={30}
-          className="bg-[#0f0f0f] relative flex flex-col"
+          className="relative flex flex-col bg-muted/30"
         >
           {/* Editor Header */}
-          <div className="h-12 border-b border-gray-800 flex items-center justify-between px-4 bg-[#111111]">
+          <div className="flex items-center justify-between h-12 px-4 border-b border-border bg-card">
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-1 text-xs text-gray-400 h-7 hover:text-white"
+                className="gap-1 text-xs text-muted-foreground h-7 hover:text-foreground"
               >
                 <span className="text-blue-400">JS</span> JavaScript{" "}
                 <ChevronDown size={12} />
@@ -179,9 +187,10 @@ export default function Session() {
             <div className="flex items-center gap-2">
               <Button
                 size="sm"
-                className="h-7 gap-1.5 bg-green-600 hover:bg-green-700 text-white font-medium px-3 rounded text-xs"
+                className="h-7 gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-3 rounded text-xs"
               >
-                <Play size={12} fill="currentColor" /> Run Code
+                <Play size={12} fill="currentColor" />{" "}
+                {t("pages.session.editor.runCode")}
               </Button>
             </div>
           </div>
@@ -189,42 +198,42 @@ export default function Session() {
           {/* Editor Area (Mock) */}
           <div className="relative flex-1 font-mono text-sm">
             <div className="absolute inset-0 flex">
-              <div className="w-12 bg-[#111111] border-r border-gray-800 text-gray-600 text-right pr-3 pt-4 select-none leading-6">
+              <div className="w-12 pt-4 pr-3 leading-6 text-right border-r select-none bg-card border-border text-muted-foreground">
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div key={i}>{i + 1}</div>
                 ))}
               </div>
-              <div className="flex-1 p-4 text-gray-300 leading-6 bg-[#0f0f0f]">
+              <div className="flex-1 p-4 leading-6 text-foreground bg-muted/30">
                 <div className="text-purple-400">
                   class <span className="text-yellow-300">Solution</span>{" "}
-                  <span className="text-white">{`{`}</span>
+                  <span className="text-foreground">{`{`}</span>
                 </div>
                 <div className="pl-4">
-                  <span className="text-gray-500">/**</span>
+                  <span className="text-muted-foreground">/**</span>
                 </div>
                 <div className="pl-4">
-                  <span className="text-gray-500">
+                  <span className="text-muted-foreground">
                     &nbsp;* @param {`{number[]}`} nums
                   </span>
                 </div>
                 <div className="pl-4">
-                  <span className="text-gray-500">
+                  <span className="text-muted-foreground">
                     &nbsp;* @param {`{number}`} target
                   </span>
                 </div>
                 <div className="pl-4">
-                  <span className="text-gray-500">
+                  <span className="text-muted-foreground">
                     &nbsp;* @return {`{number[]}`}
                   </span>
                 </div>
                 <div className="pl-4">
-                  <span className="text-gray-500">&nbsp;*/</span>
+                  <span className="text-muted-foreground">&nbsp;*/</span>
                 </div>
                 <div className="pl-4">
                   <span className="text-blue-400">twoSum</span>
-                  <span className="text-white">(nums, target) {`{`}</span>
+                  <span className="text-foreground">(nums, target) {`{`}</span>
                 </div>
-                <div className="pl-8 text-gray-500">
+                <div className="pl-8 text-muted-foreground">
                   // Write your code here...
                 </div>
                 <div className="pl-8">
@@ -253,19 +262,19 @@ export default function Session() {
                 <div className="pl-12">map.set(nums[i], i);</div>
                 <div className="pl-8">{`}`}</div>
                 <div className="pl-4">{`}`}</div>
-                <div className="text-white">{`}`}</div>
+                <div className="text-foreground">{`}`}</div>
               </div>
             </div>
 
             {/* Floating Controls */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 p-1.5 rounded-full bg-[#1e1e1e] border border-gray-800 shadow-xl z-20">
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 p-1.5 rounded-full bg-card border border-border shadow-xl z-20">
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
                   "h-10 w-10 rounded-full",
                   micOn
-                    ? "text-gray-200 hover:bg-gray-700"
+                    ? "text-foreground hover:bg-muted"
                     : "bg-red-500/20 text-red-500 hover:bg-red-500/30"
                 )}
                 onClick={() => setMicOn(!micOn)}
@@ -278,7 +287,7 @@ export default function Session() {
                 className={cn(
                   "h-10 w-10 rounded-full",
                   videoOn
-                    ? "text-gray-200 hover:bg-gray-700"
+                    ? "text-foreground hover:bg-muted"
                     : "bg-red-500/20 text-red-500 hover:bg-red-500/30"
                 )}
                 onClick={() => setVideoOn(!videoOn)}
@@ -287,25 +296,28 @@ export default function Session() {
               </Button>
               <Separator
                 orientation="vertical"
-                className="h-6 mx-1 bg-gray-700"
+                className="h-6 mx-1 bg-border"
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-10 h-10 text-gray-200 rounded-full hover:bg-gray-700"
+                className="w-10 h-10 rounded-full text-foreground hover:bg-muted"
+                title={t("pages.session.controls.shareScreen")}
               >
                 <MonitorUp size={18} />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-10 h-10 text-gray-200 rounded-full hover:bg-gray-700"
+                className="w-10 h-10 rounded-full text-foreground hover:bg-muted"
+                title={t("pages.session.controls.settings")}
               >
                 <Settings size={18} />
               </Button>
               <Button
                 size="icon"
                 className="w-10 h-10 text-white bg-red-600 rounded-full shadow-lg hover:bg-red-700"
+                title={t("pages.session.controls.endCall")}
               >
                 <PhoneOff size={18} />
               </Button>
@@ -313,20 +325,22 @@ export default function Session() {
           </div>
         </ResizablePanel>
 
-        <ResizableHandle className="bg-gray-800 w-[1px]" />
+        <ResizableHandle className="bg-border w-[1px]" />
 
         {/* RIGHT PANEL: VIDEO / CHAT */}
         <ResizablePanel
           defaultSize={25}
           minSize={20}
-          className="bg-[#111111] flex flex-col"
+          className="flex flex-col bg-card"
         >
-          <div className="flex items-center justify-between h-12 px-4 border-b border-gray-800">
-            <span className="text-sm font-semibold">Session Chat</span>
+          <div className="flex items-center justify-between h-12 px-4 border-b border-border">
+            <span className="text-sm font-semibold">
+              {t("pages.session.videoChat.sessionChat")}
+            </span>
             <Button
               variant="ghost"
               size="icon"
-              className="w-8 h-8 text-gray-400"
+              className="w-8 h-8 text-muted-foreground"
             >
               <Maximize2 size={16} />
             </Button>
@@ -334,8 +348,8 @@ export default function Session() {
 
           <div className="flex flex-col flex-1 gap-4 p-4">
             {/* Participant Video Mock */}
-            <div className="relative overflow-hidden bg-gray-800 border border-gray-700 rounded-lg aspect-video group">
-              <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a]">
+            <div className="relative overflow-hidden border rounded-lg bg-muted border-border aspect-video group">
+              <div className="absolute inset-0 flex items-center justify-center bg-muted">
                 <div className="flex items-center justify-center w-12 h-12 text-xl font-bold text-blue-500 border rounded-full bg-blue-500/20 border-blue-500/30">
                   C
                 </div>
@@ -343,26 +357,26 @@ export default function Session() {
               <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
                 <div className="bg-black/60 px-2 py-0.5 rounded text-[10px] text-white backdrop-blur flex items-center gap-1">
                   <MicOff size={10} className="text-red-400" />
-                  Candidate
+                  {t("pages.session.videoChat.candidate")}
                 </div>
               </div>
             </div>
 
             {/* Self Video Mock */}
-            <div className="relative overflow-hidden bg-gray-800 border border-gray-700 rounded-lg aspect-video">
-              <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a]">
-                <div className="flex items-center justify-center w-12 h-12 text-xl font-bold text-green-500 border rounded-full bg-green-500/20 border-green-500/30">
+            <div className="relative overflow-hidden border rounded-lg bg-muted border-border aspect-video">
+              <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                <div className="flex items-center justify-center w-12 h-12 text-xl font-bold border rounded-full text-primary bg-primary/20 border-primary/30">
                   You
                 </div>
               </div>
               <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
                 <div className="bg-black/60 px-2 py-0.5 rounded text-[10px] text-white backdrop-blur">
-                  You
+                  {t("pages.session.videoChat.you")}
                 </div>
               </div>
             </div>
 
-            <Separator className="bg-gray-800" />
+            <Separator className="bg-border" />
 
             {/* Chat Area Mock */}
             <ScrollArea className="flex-1">
@@ -373,28 +387,28 @@ export default function Session() {
                   </div>
                   <div>
                     <div className="text-xs text-blue-400 mb-0.5">
-                      Candidate{" "}
-                      <span className="text-gray-600 text-[10px] ml-1">
+                      {t("pages.session.videoChat.candidate")}{" "}
+                      <span className="text-muted-foreground text-[10px] ml-1">
                         10:42 AM
                       </span>
                     </div>
-                    <div className="p-2 text-sm text-gray-300 rounded-lg rounded-tl-none bg-gray-800/50">
+                    <div className="p-2 text-sm rounded-lg rounded-tl-none text-foreground bg-muted">
                       Just running current test cases...
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-row-reverse gap-2">
-                  <div className="h-6 w-6 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center text-[10px] flex-shrink-0">
+                  <div className="h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] flex-shrink-0">
                     You
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-green-400 mb-0.5">
-                      You{" "}
-                      <span className="text-gray-600 text-[10px] ml-1">
+                    <div className="text-xs text-primary mb-0.5">
+                      {t("pages.session.videoChat.you")}{" "}
+                      <span className="text-muted-foreground text-[10px] ml-1">
                         10:43 AM
                       </span>
                     </div>
-                    <div className="p-2 text-sm text-gray-300 border rounded-lg rounded-tr-none bg-green-900/10 border-green-500/20">
+                    <div className="p-2 text-sm border rounded-lg rounded-tr-none text-foreground bg-primary/10 border-primary/20">
                       Looks correct! Check edge cases.
                     </div>
                   </div>
@@ -406,12 +420,12 @@ export default function Session() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Type a message..."
-                className="w-full bg-[#111111] border border-gray-700 rounded-full px-4 py-2.5 text-sm text-white focus:outline-none focus:border-green-500/50 pr-10 hover:border-gray-600 transition-colors"
+                placeholder={t("pages.session.videoChat.typeMessage")}
+                className="w-full bg-background border border-border rounded-full px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 pr-10 hover:border-muted-foreground transition-colors"
               />
               <Button
                 size="icon"
-                className="absolute text-white bg-green-600 rounded-full right-1 top-1 h-7 w-7 hover:bg-green-500"
+                className="absolute rounded-full text-primary-foreground bg-primary right-1 top-1 h-7 w-7 hover:bg-primary/90"
               >
                 <MessageSquare size={14} />
               </Button>

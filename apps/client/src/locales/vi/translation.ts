@@ -38,10 +38,80 @@ export default {
     home: {
       welcome: "Chào mừng đến với Talent IQ",
       description: "Nội dung trang chủ",
+      badge: "Cộng tác thời gian thực",
+      headline: {
+        part1: "Lập trình cùng nhau,",
+        part2: "Học cùng nhau",
+      },
+      description2:
+        "Nền tảng tối ưu cho phỏng vấn lập trình cộng tác và lập trình cặp. Kết nối trực tiếp, code theo thời gian thực, và vượt qua các buổi phỏng vấn kỹ thuật.",
+      features: {
+        liveVideo: "Video trực tiếp",
+        codeEditor: "Trình soạn code",
+        multiLanguage: "Đa ngôn ngữ",
+      },
+      cta: {
+        startCoding: "Bắt đầu lập trình",
+        watchDemo: "Xem demo",
+      },
+      stats: {
+        activeUsers: "Người dùng hoạt động",
+        sessions: "Buổi học",
+        uptime: "Thời gian hoạt động",
+      },
+      featuresSection: {
+        title: "Mọi thứ bạn cần để",
+        titleHighlight: "Thành công",
+        subtitle:
+          "Các tính năng mạnh mẽ được thiết kế để làm cho các buổi phỏng vấn lập trình của bạn liền mạch và hiệu quả.",
+        hdVideo: {
+          title: "Video HD",
+          description:
+            "Video và âm thanh cực kỳ rõ ràng để giao tiếp liền mạch trong các buổi phỏng vấn.",
+        },
+        liveCodeEditor: {
+          title: "Trình soạn code trực tiếp",
+          description:
+            "Cộng tác theo thời gian thực với tô sáng cú pháp và hỗ trợ nhiều ngôn ngữ lập trình.",
+        },
+        easyCollaboration: {
+          title: "Cộng tác dễ dàng",
+          description:
+            "Chia sẻ màn hình, thảo luận giải pháp và học hỏi lẫn nhau theo thời gian thực.",
+        },
+      },
     },
     session: {
       title: "Buổi học",
       description: "Quản lý các buổi học của bạn",
+      problemPanel: {
+        difficulty: {
+          easy: "Dễ",
+          medium: "Trung bình",
+          hard: "Khó",
+        },
+        description: "Mô tả",
+        examples: "Ví dụ",
+        constraints: "Ràng buộc",
+        example: "Ví dụ",
+        input: "Đầu vào",
+        output: "Đầu ra",
+        explanation: "Giải thích",
+      },
+      editor: {
+        runCode: "Chạy code",
+      },
+      videoChat: {
+        sessionChat: "Trò chuyện buổi học",
+        candidate: "Ứng viên",
+        you: "Bạn",
+        typeMessage: "Nhập tin nhắn...",
+      },
+      controls: {
+        shareScreen: "Chia sẻ màn hình",
+        settings: "Cài đặt",
+        endCall: "Kết thúc cuộc gọi",
+      },
     },
     problem: {
       title: "Bài tập",

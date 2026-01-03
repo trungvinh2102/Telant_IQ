@@ -38,10 +38,80 @@ export default {
     home: {
       welcome: "Welcome to Talent IQ",
       description: "Home page content",
+      badge: "Real-time Collaboration",
+      headline: {
+        part1: "Code Together,",
+        part2: "Learn Together",
+      },
+      description2:
+        "The ultimate platform for collaborative coding interviews and pair programming. Connect face-to-face, code in real-time, and ace your technical interviews.",
+      features: {
+        liveVideo: "Live Video Chat",
+        codeEditor: "Code Editor",
+        multiLanguage: "Multi-Language",
+      },
+      cta: {
+        startCoding: "Start Coding Now",
+        watchDemo: "Watch Demo",
+      },
+      stats: {
+        activeUsers: "Active Users",
+        sessions: "Sessions",
+        uptime: "Uptime",
+      },
+      featuresSection: {
+        title: "Everything You Need to",
+        titleHighlight: "Succeed",
+        subtitle:
+          "Powerful features designed to make your coding interviews seamless and productive.",
+        hdVideo: {
+          title: "HD Video Call",
+          description:
+            "Crystal clear video and audio for seamless communication during interviews.",
+        },
+        liveCodeEditor: {
+          title: "Live Code Editor",
+          description:
+            "Collaborate in real-time with syntax highlighting and multiple language support.",
+        },
+        easyCollaboration: {
+          title: "Easy Collaboration",
+          description:
+            "Share your screen, discuss solutions, and learn from each other in real-time.",
+        },
+      },
     },
     session: {
       title: "Session Page",
       description: "Manage your coding sessions",
+      problemPanel: {
+        difficulty: {
+          easy: "Easy",
+          medium: "Medium",
+          hard: "Hard",
+        },
+        description: "Description",
+        examples: "Examples",
+        constraints: "Constraints",
+        example: "Example",
+        input: "Input",
+        output: "Output",
+        explanation: "Explanation",
+      },
+      editor: {
+        runCode: "Run Code",
+      },
+      videoChat: {
+        sessionChat: "Session Chat",
+        candidate: "Candidate",
+        you: "You",
+        typeMessage: "Type a message...",
+      },
+      controls: {
+        shareScreen: "Share Screen",
+        settings: "Settings",
+        endCall: "End Call",
+      },
     },
     problem: {
       title: "Problems",
