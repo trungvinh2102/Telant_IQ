@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   BellIcon,
   CreditCardIcon,
@@ -32,6 +33,7 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const { t } = useTranslation();
   const { isMobile } = useSidebar();
 
   return (
@@ -80,21 +82,21 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <UserCircleIcon />
-                Account
+                {t("nav.account")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />
-                Billing
+                {t("nav.billing")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
-                Notifications
+                {t("nav.notifications")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOutIcon />
-              Log out
+              {t("nav.logOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

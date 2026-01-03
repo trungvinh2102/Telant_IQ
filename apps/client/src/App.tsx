@@ -2,10 +2,10 @@ import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import ProtectedRoute from "@/layouts/ProtectedRoute";
+import { ROUTES } from "@/routes";
 
 const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
 
 function PageLoader() {
   return (
@@ -26,7 +26,13 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="/" element={<Dashboard />} />
+            {ROUTES.map(route => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.component />}
+              />
+            ))}
           </Route>
         </Route>
       </Routes>

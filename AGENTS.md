@@ -19,6 +19,7 @@ packages/
 ## Essential Commands
 
 ### Development
+
 ```bash
 # Start both client and server
 yarn dev
@@ -34,6 +35,7 @@ yarn db:logs
 ```
 
 ### Build & Quality
+
 ```bash
 # Build both apps
 yarn build
@@ -54,13 +56,19 @@ docker-compose down          # Stop all services
 ```
 
 ### Testing
-**Note**: No test framework is currently configured. When adding tests, use Vitest for client and Jest for server. Add test scripts to package.json.
+
+**Note**: No test framework is currently configured. To add tests:
+
+- Client: Install `vitest` and add `test: "vitest"` script
+- Server: Install `jest` and `@types/jest`, add `test: "jest"` script
+- Run single test: `vitest run <file>` or `jest <file>`
 
 ---
 
 ## Code Style Guidelines
 
 ### Imports & Organization
+
 - **Client (ES Modules)**: Use `import/export` syntax, type: "module" in package.json
 - **Server (CommonJS)**: Use `import/export` with TypeScript compilation to CommonJS
 - Order external libs first, then internal modules
@@ -68,6 +76,7 @@ docker-compose down          # Stop all services
 - Absolute imports over relative where possible (client)
 
 ### Formatting (Prettier)
+
 - Semi-colons: required
 - Quotes: double quotes (`"`)
 - Trailing commas: ES5 style
@@ -77,6 +86,7 @@ docker-compose down          # Stop all services
 - Line endings: LF (not CRLF)
 
 ### TypeScript
+
 - **Strict mode**: enabled in both workspaces
 - **Client**: ES2020 target, moduleResolution: "bundler"
 - **Server**: ES2020 target, moduleResolution: "node"
@@ -85,6 +95,7 @@ docker-compose down          # Stop all services
 - Interface for object shapes, type for unions/primitives
 
 ### Naming Conventions
+
 - **Components**: PascalCase (`UserProfile.tsx`, `useAuth.ts`)
 - **Functions/Variables**: camelCase (`getUserData`, `isLoading`)
 - **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`)
@@ -92,6 +103,7 @@ docker-compose down          # Stop all services
 - **Files**: kebab-case for utilities, PascalCase for components
 
 ### Error Handling
+
 - **Server**: Use Express error middleware, wrap async route handlers in try/catch
 - **Client**: Use RTK Query error states, implement error boundaries
 - Log errors with context: `console.error('[server] ❌ Error:', error.message)`
@@ -99,6 +111,7 @@ docker-compose down          # Stop all services
 - Exit on fatal server errors (`process.exit(1)`)
 
 ### React Patterns
+
 - Use functional components with hooks
 - Default export for components: `export default function Component() {}`
 - Named exports for utilities/types: `export const helper = () => {}`
@@ -107,6 +120,7 @@ docker-compose down          # Stop all services
 - Class names with Tailwind: `className="flex items-center justify-center"`
 
 ### Express Patterns
+
 - Use TypeScript types for req/res: `(req: Request, res: Response) => {}`
 - Middleware order: helmet → cors → compression → express.json → routes → errorHandler
 - Database queries via pool from `src/config/database.ts`
@@ -114,6 +128,7 @@ docker-compose down          # Stop all services
 - Async route handlers: wrap in try/catch or use error handling middleware
 
 ### Logging Conventions
+
 - **Server logs**: Prefix with `[server]` emoji + message
   - `[server] 🚀 Starting Talent IQ Server...`
   - `[server] ✅ Database connected successfully`
@@ -123,24 +138,28 @@ docker-compose down          # Stop all services
 - Avoid console.log in production code; use proper logging libraries if needed
 
 ### ESLint Rules
+
 - **Client**: `@typescript-eslint/recommended`, `react-hooks/recommended`, `react-refresh` plugin
 - **Server**: `@typescript-eslint/recommended`, `no-console` disabled (for logging)
 - Treat warnings as errors in CI/CD: `--max-warnings 0`
 - Fix lint issues before committing
 
 ### Shadcn UI Components
+
 - Add components: `cd apps/client && npx shadcn-ui@latest add <component>`
 - Use the `cn()` utility from `@/lib/utils` for conditional classes
 - Components are in `apps/client/src/components/ui/`
 - Follow existing patterns for usage
 
 ### Environment Variables
+
 - **Client**: Prefixed with `VITE_`, accessible via `import.meta.env.VITE_*`
 - **Server**: Standard process.env, defined in `apps/server/.env`
 - Never commit `.env` files (add to `.gitignore`)
 - Use `.env.example` as template
 
 ### Docker Guidelines
+
 - Use `docker-compose.yml` for multi-service orchestration
 - Database runs in separate container with health checks
 - Server depends on postgres with healthcheck condition
@@ -150,6 +169,7 @@ docker-compose down          # Stop all services
 ---
 
 ## Before Committing
+
 1. Run `yarn lint` and fix all errors/warnings
 2. Run `yarn format` to ensure consistent formatting
 3. Run `yarn build` to verify TypeScript compilation
