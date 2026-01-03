@@ -3,7 +3,7 @@ import { ArrowUpCircleIcon } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { NAV_ITEMS } from "@/routes/index";
+import { NAV_ITEMS } from "@/routes/constants";
 import {
   Sidebar,
   SidebarContent,
