@@ -51,6 +51,26 @@ export default {
       title: "Problem",
       description: "Problem details and solution",
     },
+    problemsPage: {
+      header: {
+        title: "Practice Problems",
+        description: "Sharpen your coding skills with these curated problems.",
+      },
+      difficulty: {
+        easy: "Easy",
+        medium: "Medium",
+        hard: "Hard",
+      },
+      stats: {
+        total: "Total Problems",
+        easy: "Easy",
+        medium: "Medium",
+        hard: "Hard",
+      },
+      action: {
+        solve: "Solve",
+      },
+    },
   },
   dashboard: {
     totalRevenue: "Total Revenue",

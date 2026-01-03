@@ -32,7 +32,7 @@ export const ROUTES = [
   {
     path: "/problem",
     title: "Problems",
-    component: lazy(() => import("@/pages/Problem")),
+    component: lazy(() => import("@/pages/Problems")),
   },
   {
     path: "/problem/:id",

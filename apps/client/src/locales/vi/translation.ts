@@ -51,6 +51,26 @@ export default {
       title: "Bài tập",
       description: "Chi tiết bài tập và giải pháp",
     },
+    problemsPage: {
+      header: {
+        title: "Bài tập thực hành",
+        description: "Rèn luyện kỹ năng lập trình với các bài tập chọn lọc.",
+      },
+      difficulty: {
+        easy: "Dễ",
+        medium: "Trung bình",
+        hard: "Khó",
+      },
+      stats: {
+        total: "Tổng số bài",
+        easy: "Dễ",
+        medium: "Trung bình",
+        hard: "Khó",
+      },
+      action: {
+        solve: "Giải bài",
+      },
+    },
   },
   dashboard: {
     totalRevenue: "Tổng doanh thu",
