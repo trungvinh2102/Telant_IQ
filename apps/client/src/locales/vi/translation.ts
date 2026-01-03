@@ -27,6 +27,7 @@ export default {
     createAccount: "Tạo tài khoản",
     signUpToGetStarted: "Đăng ký để bắt đầu với Talent IQ",
     fullName: "Họ và tên",
+    username: "Tên đăng nhập",
     email: "Email",
     password: "Mật khẩu",
     confirmPassword: "Xác nhận mật khẩu",

@@ -1,9 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authService } from "@/services";
+import { ApiError } from "@/services/api/errors";
+import { useAppDispatch } from "@/store/hooks";
+import { setCredentials } from "@/store/authSlice";
 import {
   Card,
   CardContent,
@@ -17,13 +21,41 @@ import { Zap, Eye, EyeOff } from "lucide-react";
 
 function LoginPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login:", { email, password });
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await authService.login({ email, password });
+      console.log("Login Success:", response);
+
+      if (response.user) {
+        dispatch(setCredentials({ user: response.user }));
+        navigate("/");
+      }
+    } catch (err) {
+      if (ApiError.isApiError(err)) {
+        setError(
+          (err.details as { message?: string })?.message ||
+            err.message ||
+            t("login.error")
+        );
+      } else {
+        setError(t("login.unexpectedError"));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,19 +67,19 @@ function LoginPage() {
       </div>
 
       {/* Header Actions position */}
-      <div className="absolute top-4 right-4 z-20">
+      <div className="absolute z-20 top-4 right-4">
         <HeaderActions />
       </div>
 
-      <div className="relative z-10 w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="relative z-10 w-full max-w-md duration-1000 animate-in fade-in slide-in-from-bottom-4">
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2 px-4 py-2 border rounded-full bg-card shadow-sm border-border">
+          <div className="flex items-center gap-2 px-4 py-2 border rounded-full shadow-sm bg-card border-border">
             <Zap className="w-5 h-5 text-primary" fill="currentColor" />
             <span className="font-bold tracking-tight">Talent IQ</span>
           </div>
         </div>
 
-        <Card className="border-border/50 shadow-2xl bg-card/80 backdrop-blur-sm">
+        <Card className="shadow-2xl border-border/50 bg-card/80 backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-3xl font-bold tracking-tight">
               {t("login.welcomeBack")}
@@ -81,20 +113,20 @@ function LoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    className="bg-background/50 border-border focus-visible:ring-primary/30 pr-10"
+                    className="pr-10 bg-background/50 border-border focus-visible:ring-primary/30"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
+                    className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="w-4 h-4" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="w-4 h-4" />
                     )}
                     <span className="sr-only">
                       {showPassword ? "Hide password" : "Show password"}
@@ -102,11 +134,17 @@ function LoginPage() {
                   </Button>
                 </div>
               </div>
+              {error && (
+                <div className="p-3 text-sm font-medium border rounded-md text-destructive border-destructive/20 bg-destructive/10">
+                  {error}
+                </div>
+              )}
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="w-full font-semibold transition-all shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
               >
-                {t("login.signIn")}
+                {isLoading ? t("login.signingIn") : t("login.signIn")}
               </Button>
             </form>
           </CardContent>

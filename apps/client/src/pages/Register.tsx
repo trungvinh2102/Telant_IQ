@@ -1,9 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authService } from "@/services";
+import { ApiError } from "@/services/api/errors";
+import { useAppDispatch } from "@/store/hooks";
+import { setCredentials } from "@/store/authSlice";
 import {
   Card,
   CardContent,
@@ -17,20 +21,61 @@ import { Zap, Eye, EyeOff } from "lucide-react";
 
 function RegisterPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [name, setName] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError(t("register.passwordsDoNotMatch"));
       return;
     }
-    console.log("Register:", { name, email, password });
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await authService.register({
+        email,
+        password,
+        username,
+        name,
+      });
+
+      console.log("Register Success:", response);
+
+      // Update global auth state
+      if (response.user) {
+        dispatch(setCredentials({ user: response.user }));
+        // Navigate to home after registration
+        navigate("/");
+      } else {
+        // If user object not returned, redirect to login
+        navigate("/login");
+      }
+    } catch (err) {
+      if (ApiError.isApiError(err)) {
+        setError(
+          (err.details as { message?: string })?.message ||
+            err.message ||
+            t("register.error")
+        );
+      } else {
+        setError(t("register.unexpectedError"));
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,6 +123,20 @@ function RegisterPage() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="username">
+                  {t("register.username") || "Username"}
+                </Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="johndoe123"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  className="bg-background/50 border-border focus-visible:ring-primary/30"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="email">{t("register.email")}</Label>
                 <Input
                   id="email"
@@ -89,33 +148,31 @@ function RegisterPage() {
                   required
                 />
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="password">{t("register.password")}</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      className="pr-10 bg-background/50 border-border focus-visible:ring-primary/30"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">{t("register.password")}</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="pr-10 bg-background/50 border-border focus-visible:ring-primary/30"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </Button>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">
@@ -149,11 +206,19 @@ function RegisterPage() {
                   </div>
                 </div>
               </div>
+              {error && (
+                <div className="p-3 text-sm font-medium border rounded-md text-destructive border-destructive/20 bg-destructive/10">
+                  {error}
+                </div>
+              )}
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="w-full font-semibold transition-all shadow-lg bg-primary hover:bg-primary/90 shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
               >
-                {t("register.createAccountBtn")}
+                {isLoading
+                  ? t("register.creatingAccount")
+                  : t("register.createAccountBtn")}
               </Button>
             </form>
           </CardContent>

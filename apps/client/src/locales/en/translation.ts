@@ -27,6 +27,7 @@ export default {
     createAccount: "Create Account",
     signUpToGetStarted: "Sign up to get started with Talent IQ",
     fullName: "Full Name",
+    username: "Username",
     email: "Email",
     password: "Password",
     confirmPassword: "Confirm Password",

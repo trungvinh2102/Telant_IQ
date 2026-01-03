@@ -38,9 +38,16 @@ export const register = async (req: Request, res: Response) => {
       expiresIn: JWT_EXPIRES_IN,
     });
 
+    // Set HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.status(201).json({
       message: "User registered successfully",
-      token,
       user: {
         id: user.id,
         username: user.username,
@@ -76,9 +83,16 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: JWT_EXPIRES_IN,
     });
 
+    // Set HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         username: user.username,
@@ -117,4 +131,8 @@ export const getMe = async (req: AuthRequest, res: Response) => {
     console.error("[server] ❌ getMe error:", err.message);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
 };
