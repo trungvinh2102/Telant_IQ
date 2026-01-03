@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: talent_iq_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: talent_iq
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "listen_addresses=*"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - talent_iq_network
+
+  server:
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    container_name: talent_iq_server
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_NAME: talent_iq
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - talent_iq_network
+    volumes:
+      - ./apps/server/src:/app/apps/server/src
+
+  client:
+    build:
+      context: .
+      dockerfile: ./apps/client/Dockerfile
+    container_name: talent_iq_client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    networks:
+      - talent_iq_network
+    volumes:
+      - ./apps/client/src:/app/apps/client/src
+
+networks:
+  talent_iq_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,14 @@
+node_modules
+.env
+.env.local
+.env.*.local
+dist
+build
+.git
+.gitignore
+.vscode
+.idea
+coverage
+*.log
+.DS_Store
+.turbo

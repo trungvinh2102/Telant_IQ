@@ -1,0 +1,28 @@
+{
+  "name": "talent-iq-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/client",
+    "apps/server"
+  ],
+  "scripts": {
+    "client": "yarn workspace client dev",
+    "server": "yarn workspace server dev",
+    "dev": "concurrently \"yarn workspace client dev\" \"yarn workspace server dev\" --names \"client,server\" --prefix-colors \"blue,green\"",
+    "build": "yarn workspaces run build",
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "db:up": "docker-compose up -d postgres",
+    "db:down": "docker-compose down postgres",
+    "db:logs": "docker-compose logs -f postgres"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "prettier": "^3.1.1",
+    "eslint": "^8.56.0"
+  }
+}
