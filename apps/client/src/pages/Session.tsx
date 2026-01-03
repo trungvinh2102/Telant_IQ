@@ -1,16 +1,11 @@
 import {
   Code2,
-  Mic,
-  MicOff,
-  Video,
-  VideoOff,
-  MonitorUp,
-  PhoneOff,
-  Settings,
-  MessageSquare,
-  ChevronDown,
-  Play,
-  Maximize2,
+  Plus,
+  Search,
+  Calendar,
+  Clock,
+  Users,
+  ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,421 +13,217 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { Separator } from "@/components/ui/separator";
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SessionDetail from "./SessionDetail";
+
+interface SessionData {
+  id: string;
+  name: string;
+  problem: string;
+  difficulty: "easy" | "medium" | "hard";
+  status: "ongoing" | "completed" | "scheduled";
+  participants: number;
+  date: string;
+  startTime: string;
+}
+
+const MOCK_SESSIONS: SessionData[] = [
+  {
+    id: "1",
+    name: "Technical Interview - John Doe",
+    problem: "Two Sum",
+    difficulty: "easy",
+    status: "ongoing",
+    participants: 2,
+    date: "2024-01-04",
+    startTime: "10:00 AM",
+  },
+  {
+    id: "2",
+    name: "Pair Programming: Backend Architecture",
+    problem: "Add Two Numbers",
+    difficulty: "medium",
+    status: "scheduled",
+    participants: 4,
+    date: "2024-01-05",
+    startTime: "02:30 PM",
+  },
+  {
+    id: "3",
+    name: "Mock Interview: Frontend Specialist",
+    problem: "Longest Substring",
+    difficulty: "medium",
+    status: "completed",
+    participants: 2,
+    date: "2024-01-03",
+    startTime: "09:15 AM",
+  },
+  {
+    id: "4",
+    name: "System Design Practice",
+    problem: "Basic Calculator",
+    difficulty: "hard",
+    status: "completed",
+    participants: 3,
+    date: "2024-01-02",
+    startTime: "04:00 PM",
+  },
+];
 
 export default function Session() {
-  const [micOn, setMicOn] = useState(true);
-  const [videoOn, setVideoOn] = useState(true);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
+    null
+  );
   const { t } = useTranslation();
 
-  return (
-    <div className="h-[calc(100vh-4rem)] w-full bg-background text-foreground overflow-hidden flex flex-col">
-      {/* Top Bar - Simplified for Session specific actions if needed, otherwise rely on MainLayout header */}
-      {/* Assuming MainLayout header is present, but we might want a session specific sub-header or just the content */}
+  if (selectedSessionId) {
+    return (
+      <SessionDetail
+        sessionId={selectedSessionId}
+        onBack={() => setSelectedSessionId(null)}
+      />
+    );
+  }
 
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* LEFT PANEL: PROBLEM DESCRIPTION */}
-        <ResizablePanel
-          defaultSize={25}
-          minSize={20}
-          className="border-r bg-card border-border"
-        >
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded text-primary bg-primary/20">
-                  <Code2 size={14} />
-                </div>
-                <span className="font-semibold">Two Sum</span>
-              </div>
-              <div className="flex gap-2">
+  return (
+    <div className="flex flex-col w-full h-full p-6 space-y-6 overflow-y-auto duration-500 bg-background animate-in fade-in">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("pages.session.title")}
+          </h1>
+          <p className="text-muted-foreground">
+            {t("pages.session.description")}
+          </p>
+        </div>
+        <Button className="gap-2 transition-all shadow-lg hover:shadow-primary/20">
+          <Plus size={18} />
+          Create New Session
+        </Button>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search
+            className="absolute -translate-y-1/2 left-3 top-1/2 text-muted-foreground"
+            size={18}
+          />
+          <Input placeholder="Search sessions..." className="pl-10" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            All
+          </Button>
+          <Button variant="ghost" size="sm">
+            Ongoing
+          </Button>
+          <Button variant="ghost" size="sm">
+            Scheduled
+          </Button>
+          <Button variant="ghost" size="sm">
+            Completed
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {MOCK_SESSIONS.map(session => (
+          <Card
+            key={session.id}
+            className="relative flex flex-col overflow-hidden transition-all cursor-pointer group border-border/50 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5"
+            onClick={() => setSelectedSessionId(session.id)}
+          >
+            <div
+              className={`absolute top-0 left-0 w-1 h-full transition-colors ${
+                session.status === "ongoing"
+                  ? "bg-emerald-500"
+                  : session.status === "scheduled"
+                    ? "bg-blue-500"
+                    : "bg-muted"
+              }`}
+            />
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between mb-2">
                 <Badge
                   variant="outline"
-                  className="text-primary border-primary/20 bg-primary/10 hover:bg-primary/20"
+                  className={cn(
+                    "capitalize",
+                    session.status === "ongoing" &&
+                      "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+                    session.status === "scheduled" &&
+                      "bg-blue-500/10 text-blue-500 border-blue-500/20",
+                    session.status === "completed" &&
+                      "bg-muted text-muted-foreground"
+                  )}
                 >
-                  {t("pages.session.problemPanel.difficulty.easy")}
+                  {session.status}
                 </Badge>
-              </div>
-            </div>
-
-            <ScrollArea className="flex-1">
-              <div className="p-6 space-y-6">
-                <div>
-                  <h2 className="mb-2 text-xl font-bold">
-                    {t("pages.session.problemPanel.description")}
-                  </h2>
-                  <div className="p-4 text-sm leading-relaxed border rounded-lg bg-muted border-border text-muted-foreground">
-                    <p>
-                      Given an array of integers{" "}
-                      <code className="text-primary">nums</code> and an integer{" "}
-                      <code className="text-primary">target</code>, return
-                      indices of the two numbers such that they add up to{" "}
-                      <code className="text-primary">target</code>.
-                    </p>
-                    <p className="mt-2">
-                      You may assume that each input would have{" "}
-                      <strong>exactly one solution</strong>, and you may not use
-                      the same element twice.
-                    </p>
-                    <p className="mt-2">
-                      You can return the answer in any order.
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold tracking-wider uppercase text-muted-foreground">
-                    {t("pages.session.problemPanel.examples")}
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="p-3 text-sm border rounded-md bg-muted border-border">
-                      <div className="mb-1 font-medium text-foreground">
-                        {t("pages.session.problemPanel.example")} 1:
-                      </div>
-                      <div className="pl-2 border-l-2 border-primary/30">
-                        <div className="text-muted-foreground">
-                          {t("pages.session.problemPanel.input")}:{" "}
-                          <span className="font-mono text-foreground">
-                            nums = [2,7,11,15], target = 9
-                          </span>
-                        </div>
-                        <div className="text-muted-foreground">
-                          {t("pages.session.problemPanel.output")}:{" "}
-                          <span className="font-mono text-foreground">
-                            [0,1]
-                          </span>
-                        </div>
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          {t("pages.session.problemPanel.explanation")}: Because
-                          nums[0] + nums[1] == 9, we return [0, 1].
-                        </div>
-                      </div>
+                <div className="flex -space-x-2">
+                  {Array.from({
+                    length: Math.min(session.participants, 3),
+                  }).map((_, i) => (
+                    <Avatar
+                      key={i}
+                      className="w-6 h-6 border-2 border-background"
+                    >
+                      <AvatarFallback className="text-[10px] bg-muted/50">
+                        P{i + 1}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                  {session.participants > 3 && (
+                    <div className="h-6 w-6 rounded-full border-2 border-background bg-muted flex items-center justify-center text-[8px] font-bold">
+                      +{session.participants - 3}
                     </div>
-
-                    <div className="p-3 text-sm border rounded-md bg-muted border-border">
-                      <div className="mb-1 font-medium text-foreground">
-                        {t("pages.session.problemPanel.example")} 2:
-                      </div>
-                      <div className="pl-2 border-l-2 border-primary/30">
-                        <div className="text-muted-foreground">
-                          {t("pages.session.problemPanel.input")}:{" "}
-                          <span className="font-mono text-foreground">
-                            nums = [3,2,4], target = 6
-                          </span>
-                        </div>
-                        <div className="text-muted-foreground">
-                          {t("pages.session.problemPanel.output")}:{" "}
-                          <span className="font-mono text-foreground">
-                            [1,2]
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold tracking-wider uppercase text-muted-foreground">
-                    {t("pages.session.problemPanel.constraints")}
-                  </h3>
-                  <ul className="pl-5 space-y-1 text-sm list-disc text-muted-foreground marker:text-muted-foreground/50">
-                    <li>
-                      <code className="px-1 text-xs rounded bg-muted">
-                        2 &lt;= nums.length &lt;= 10^4
-                      </code>
-                    </li>
-                    <li>
-                      <code className="px-1 text-xs rounded bg-muted">
-                        -10^9 &lt;= nums[i] &lt;= 10^9
-                      </code>
-                    </li>
-                    <li>
-                      <code className="px-1 text-xs rounded bg-muted">
-                        -10^9 &lt;= target &lt;= 10^9
-                      </code>
-                    </li>
-                  </ul>
+                  )}
                 </div>
               </div>
-            </ScrollArea>
-          </div>
-        </ResizablePanel>
-
-        <ResizableHandle className="bg-border w-[1px]" />
-
-        {/* MIDDLE PANEL: CODE EDITOR */}
-        <ResizablePanel
-          defaultSize={50}
-          minSize={30}
-          className="relative flex flex-col bg-muted/30"
-        >
-          {/* Editor Header */}
-          <div className="flex items-center justify-between h-12 px-4 border-b border-border bg-card">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1 text-xs text-muted-foreground h-7 hover:text-foreground"
-              >
-                <span className="text-blue-400">JS</span> JavaScript{" "}
-                <ChevronDown size={12} />
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                className="h-7 gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-3 rounded text-xs"
-              >
-                <Play size={12} fill="currentColor" />{" "}
-                {t("pages.session.editor.runCode")}
-              </Button>
-            </div>
-          </div>
-
-          {/* Editor Area (Mock) */}
-          <div className="relative flex-1 font-mono text-sm">
-            <div className="absolute inset-0 flex">
-              <div className="w-12 pt-4 pr-3 leading-6 text-right border-r select-none bg-card border-border text-muted-foreground">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <div key={i}>{i + 1}</div>
-                ))}
-              </div>
-              <div className="flex-1 p-4 leading-6 text-foreground bg-muted/30">
-                <div className="text-purple-400">
-                  class <span className="text-yellow-300">Solution</span>{" "}
-                  <span className="text-foreground">{`{`}</span>
+              <CardTitle className="text-lg leading-tight transition-colors line-clamp-2 group-hover:text-primary">
+                {session.name}
+              </CardTitle>
+              <CardDescription className="flex items-center gap-1.5 mt-2">
+                <Code2 size={14} className="text-primary/70" />
+                {session.problem}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-4">
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Calendar size={14} />
+                  {session.date}
                 </div>
-                <div className="pl-4">
-                  <span className="text-muted-foreground">/**</span>
+                <div className="flex items-center gap-2">
+                  <Clock size={14} />
+                  {session.startTime}
                 </div>
-                <div className="pl-4">
-                  <span className="text-muted-foreground">
-                    &nbsp;* @param {`{number[]}`} nums
-                  </span>
-                </div>
-                <div className="pl-4">
-                  <span className="text-muted-foreground">
-                    &nbsp;* @param {`{number}`} target
-                  </span>
-                </div>
-                <div className="pl-4">
-                  <span className="text-muted-foreground">
-                    &nbsp;* @return {`{number[]}`}
-                  </span>
-                </div>
-                <div className="pl-4">
-                  <span className="text-muted-foreground">&nbsp;*/</span>
-                </div>
-                <div className="pl-4">
-                  <span className="text-blue-400">twoSum</span>
-                  <span className="text-foreground">(nums, target) {`{`}</span>
-                </div>
-                <div className="pl-8 text-muted-foreground">
-                  // Write your code here...
-                </div>
-                <div className="pl-8">
-                  <span className="text-purple-400">const</span> map ={" "}
-                  <span className="text-purple-400">new</span>{" "}
-                  <span className="text-yellow-300">Map</span>();
-                </div>
-                <div className="pl-8">
-                  <span className="text-purple-400">for</span> (
-                  <span className="text-purple-400">let</span> i = 0; i &lt;
-                  nums.length; i++) {`{`}
-                </div>
-                <div className="pl-12">
-                  <span className="text-purple-400">const</span> diff = target -
-                  nums[i];
-                </div>
-                <div className="pl-12">
-                  <span className="text-purple-400">if</span> (map.has(diff)){" "}
-                  {`{`}
-                </div>
-                <div className="pl-16">
-                  <span className="text-purple-400">return</span>{" "}
-                  [map.get(diff), i];
-                </div>
-                <div className="pl-12">{`}`}</div>
-                <div className="pl-12">map.set(nums[i], i);</div>
-                <div className="pl-8">{`}`}</div>
-                <div className="pl-4">{`}`}</div>
-                <div className="text-foreground">{`}`}</div>
-              </div>
-            </div>
-
-            {/* Floating Controls */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 p-1.5 rounded-full bg-card border border-border shadow-xl z-20">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-10 w-10 rounded-full",
-                  micOn
-                    ? "text-foreground hover:bg-muted"
-                    : "bg-red-500/20 text-red-500 hover:bg-red-500/30"
-                )}
-                onClick={() => setMicOn(!micOn)}
-              >
-                {micOn ? <Mic size={18} /> : <MicOff size={18} />}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-10 w-10 rounded-full",
-                  videoOn
-                    ? "text-foreground hover:bg-muted"
-                    : "bg-red-500/20 text-red-500 hover:bg-red-500/30"
-                )}
-                onClick={() => setVideoOn(!videoOn)}
-              >
-                {videoOn ? <Video size={18} /> : <VideoOff size={18} />}
-              </Button>
-              <Separator
-                orientation="vertical"
-                className="h-6 mx-1 bg-border"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-10 h-10 rounded-full text-foreground hover:bg-muted"
-                title={t("pages.session.controls.shareScreen")}
-              >
-                <MonitorUp size={18} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-10 h-10 rounded-full text-foreground hover:bg-muted"
-                title={t("pages.session.controls.settings")}
-              >
-                <Settings size={18} />
-              </Button>
-              <Button
-                size="icon"
-                className="w-10 h-10 text-white bg-red-600 rounded-full shadow-lg hover:bg-red-700"
-                title={t("pages.session.controls.endCall")}
-              >
-                <PhoneOff size={18} />
-              </Button>
-            </div>
-          </div>
-        </ResizablePanel>
-
-        <ResizableHandle className="bg-border w-[1px]" />
-
-        {/* RIGHT PANEL: VIDEO / CHAT */}
-        <ResizablePanel
-          defaultSize={25}
-          minSize={20}
-          className="flex flex-col bg-card"
-        >
-          <div className="flex items-center justify-between h-12 px-4 border-b border-border">
-            <span className="text-sm font-semibold">
-              {t("pages.session.videoChat.sessionChat")}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-8 h-8 text-muted-foreground"
-            >
-              <Maximize2 size={16} />
-            </Button>
-          </div>
-
-          <div className="flex flex-col flex-1 gap-4 p-4">
-            {/* Participant Video Mock */}
-            <div className="relative overflow-hidden border rounded-lg bg-muted border-border aspect-video group">
-              <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                <div className="flex items-center justify-center w-12 h-12 text-xl font-bold text-blue-500 border rounded-full bg-blue-500/20 border-blue-500/30">
-                  C
+                <div className="flex items-center gap-2">
+                  <Users size={14} />
+                  {session.participants} participants
                 </div>
               </div>
-              <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
-                <div className="bg-black/60 px-2 py-0.5 rounded text-[10px] text-white backdrop-blur flex items-center gap-1">
-                  <MicOff size={10} className="text-red-400" />
-                  {t("pages.session.videoChat.candidate")}
-                </div>
+            </CardContent>
+            <CardFooter className="pt-0 transition-colors border-t border-border/10 bg-muted/5 group-hover:bg-primary/5">
+              <div className="flex items-center justify-between w-full mt-4 text-xs">
+                <Badge variant="outline" className="text-[10px] opacity-70">
+                  {session.difficulty}
+                </Badge>
+                <span className="flex items-center gap-1 font-medium transition-all -translate-x-2 opacity-0 text-primary group-hover:opacity-100 group-hover:translate-x-0">
+                  Join Session <ChevronRight size={14} />
+                </span>
               </div>
-            </div>
-
-            {/* Self Video Mock */}
-            <div className="relative overflow-hidden border rounded-lg bg-muted border-border aspect-video">
-              <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                <div className="flex items-center justify-center w-12 h-12 text-xl font-bold border rounded-full text-primary bg-primary/20 border-primary/30">
-                  You
-                </div>
-              </div>
-              <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
-                <div className="bg-black/60 px-2 py-0.5 rounded text-[10px] text-white backdrop-blur">
-                  {t("pages.session.videoChat.you")}
-                </div>
-              </div>
-            </div>
-
-            <Separator className="bg-border" />
-
-            {/* Chat Area Mock */}
-            <ScrollArea className="flex-1">
-              <div className="space-y-4">
-                <div className="flex gap-2">
-                  <div className="h-6 w-6 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center text-[10px] flex-shrink-0">
-                    C
-                  </div>
-                  <div>
-                    <div className="text-xs text-blue-400 mb-0.5">
-                      {t("pages.session.videoChat.candidate")}{" "}
-                      <span className="text-muted-foreground text-[10px] ml-1">
-                        10:42 AM
-                      </span>
-                    </div>
-                    <div className="p-2 text-sm rounded-lg rounded-tl-none text-foreground bg-muted">
-                      Just running current test cases...
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-row-reverse gap-2">
-                  <div className="h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] flex-shrink-0">
-                    You
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-primary mb-0.5">
-                      {t("pages.session.videoChat.you")}{" "}
-                      <span className="text-muted-foreground text-[10px] ml-1">
-                        10:43 AM
-                      </span>
-                    </div>
-                    <div className="p-2 text-sm border rounded-lg rounded-tr-none text-foreground bg-primary/10 border-primary/20">
-                      Looks correct! Check edge cases.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-
-            {/* Chat Input */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder={t("pages.session.videoChat.typeMessage")}
-                className="w-full bg-background border border-border rounded-full px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary/50 pr-10 hover:border-muted-foreground transition-colors"
-              />
-              <Button
-                size="icon"
-                className="absolute rounded-full text-primary-foreground bg-primary right-1 top-1 h-7 w-7 hover:bg-primary/90"
-              >
-                <MessageSquare size={14} />
-              </Button>
-            </div>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
