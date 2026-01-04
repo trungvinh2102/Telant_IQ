@@ -16,6 +16,10 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Ensure columns exist if table was already created
+ALTER TABLE users ADD COLUMN IF NOT EXISTS first_name VARCHAR(50);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS last_name VARCHAR(50);
+
 -- Roles Table
 CREATE TABLE IF NOT EXISTS roles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -86,3 +90,12 @@ CREATE TABLE IF NOT EXISTS session_participants (
     joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (session_id, user_id)
 );
+
+-- Seed Roles
+INSERT INTO roles (name, description) VALUES 
+('system_admin', 'Full system access and configuration'),
+('admin', 'Organization level administrative access'),
+('moderator', 'Access to moderate content and manage users'),
+('user', 'Standard registered user with personal access'),
+('viewer', 'Read-only access to specific shared content')
+ON CONFLICT (name) DO NOTHING;
