@@ -9,9 +9,27 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
     avatar_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Roles Table
+CREATE TABLE IF NOT EXISTS roles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- User Roles Table (Many-to-Many)
+CREATE TABLE IF NOT EXISTS user_roles (
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+    assigned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, role_id)
 );
 
 -- Problems Table
