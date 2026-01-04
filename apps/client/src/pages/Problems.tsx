@@ -1,9 +1,28 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronRight, Code2 } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import {
+  ChevronRight,
+  Code2,
+  LayoutGrid,
+  List,
+  Search,
+  Filter,
+} from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { APP_CONFIG } from "@/configs";
 
 interface Problem {
   id: number;
@@ -56,9 +75,10 @@ const problems: Problem[] = [
   },
 ];
 
-export default function Problem() {
+export default function ProblemsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<"card" | "table">("table");
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -87,10 +107,9 @@ export default function Problem() {
   };
 
   return (
-    <div className="min-h-screen p-8 font-sans transition-colors duration-300 bg-background">
-      <div className="mx-auto space-y-8">
-        {/* Header */}
-        <div className="space-y-2">
+    <div className="flex flex-col w-full h-full p-6 space-y-6 overflow-y-auto duration-500 bg-background animate-in fade-in">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             {t("pages.problemsPage.header.title")}
           </h1>
@@ -98,69 +117,128 @@ export default function Problem() {
             {t("pages.problemsPage.header.description")}
           </p>
         </div>
+        <div className="flex items-center p-1 border rounded-md bg-muted/50">
+          <Button
+            variant={viewMode === "card" ? "secondary" : "ghost"}
+            size="sm"
+            className={cn("h-8 w-8 p-0", viewMode === "card" && "shadow-sm")}
+            onClick={() => setViewMode("card")}
+          >
+            <LayoutGrid size={16} />
+          </Button>
+          <Button
+            variant={viewMode === "table" ? "secondary" : "ghost"}
+            size="sm"
+            className={cn("h-8 w-8 p-0", viewMode === "table" && "shadow-sm")}
+            onClick={() => setViewMode("table")}
+          >
+            <List size={16} />
+          </Button>
+        </div>
+      </div>
 
-        {/* Footer Stats */}
-        <div className="grid grid-cols-2 gap-4 p-8 border md:grid-cols-4 rounded-xl bg-card border-border/50">
-          <div>
-            <div className="mb-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-              {t("pages.problemsPage.stats.total")}
-            </div>
-            <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-500">
-              {problems.length}
-            </div>
+      {/* Stats Section */}
+      <div className="grid grid-cols-2 gap-4 p-6 border md:grid-cols-4 rounded-xl bg-card border-border/50 shadow-sm">
+        <div className="space-y-1">
+          <div className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+            {t("pages.problemsPage.stats.total")}
           </div>
-          <div>
-            <div className="mb-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-              {t("pages.problemsPage.stats.easy")}
-            </div>
-            <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-500">
-              {problems.filter(p => p.difficulty === "Easy").length}
-            </div>
-          </div>
-          <div>
-            <div className="mb-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-              {t("pages.problemsPage.stats.medium")}
-            </div>
-            <div className="text-3xl font-bold text-amber-600 dark:text-amber-500">
-              {problems.filter(p => p.difficulty === "Medium").length}
-            </div>
-          </div>
-          <div>
-            <div className="mb-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-              {t("pages.problemsPage.stats.hard")}
-            </div>
-            <div className="text-3xl font-bold text-rose-600 dark:text-rose-500">
-              {problems.filter(p => p.difficulty === "Hard").length}
-            </div>
+          <div className="text-2xl font-bold text-primary">
+            {problems.length}
           </div>
         </div>
+        <div className="space-y-1 border-l pl-4">
+          <div className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+            {t("pages.problemsPage.stats.easy")}
+          </div>
+          <div className="text-2xl font-bold text-emerald-500">
+            {problems.filter(p => p.difficulty === "Easy").length}
+          </div>
+        </div>
+        <div className="space-y-1 border-l pl-4">
+          <div className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+            {t("pages.problemsPage.stats.medium")}
+          </div>
+          <div className="text-2xl font-bold text-amber-500">
+            {problems.filter(p => p.difficulty === "Medium").length}
+          </div>
+        </div>
+        <div className="space-y-1 border-l pl-4">
+          <div className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+            {t("pages.problemsPage.stats.hard")}
+          </div>
+          <div className="text-2xl font-bold text-rose-500">
+            {problems.filter(p => p.difficulty === "Hard").length}
+          </div>
+        </div>
+      </div>
 
-        {/* Problem List */}
-        <div className="space-y-4">
+      {/* Filter / Search Bar */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search
+            className="absolute -translate-y-1/2 left-3 top-1/2 text-muted-foreground"
+            size={18}
+          />
+          <Input placeholder="Search problems..." className="pl-10 h-9" />
+        </div>
+        <Button variant="outline" size="sm" className="h-9 gap-2">
+          <Filter size={16} />
+          Filters
+        </Button>
+        <div className="flex gap-2 ml-auto">
+          {["All", "Algorithms", "Databases", "Shell", "Concurrency"].map(
+            cat => (
+              <Button
+                key={cat}
+                variant="ghost"
+                size="sm"
+                className="h-8 text-xs"
+              >
+                {cat}
+              </Button>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* View Mode Switching */}
+      {viewMode === "card" ? (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {problems.map(problem => (
             <Card
               key={problem.id}
-              className="p-6 transition-all hover:bg-muted/50 group border-border/50 bg-card"
+              className="p-6 transition-all hover:bg-muted/30 group border-border/50 bg-card/50 backdrop-blur-sm"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 mt-1 rounded-lg shrink-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-500">
+                  <div className="flex items-center justify-center w-10 h-10 mt-1 transition-colors rounded-lg shrink-0 bg-primary/10 text-primary group-hover:bg-primary/20">
                     <Code2 className="w-5 h-5" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold text-foreground">
+                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                         {problem.title}
                       </h3>
                       <Badge
                         variant="secondary"
-                        className={`${getDifficultyColor(problem.difficulty)} border-0 px-2.5 py-0.5`}
+                        className={cn(
+                          getDifficultyColor(problem.difficulty),
+                          "border-0 px-2 py-0 text-[10px] font-bold uppercase tracking-wider"
+                        )}
                       >
                         {getDifficultyLabel(problem.difficulty)}
                       </Badge>
                     </div>
-                    <div className="text-sm font-medium text-foreground/60">
-                      {problem.topics.join(" - ")}
+                    <div className="flex flex-wrap gap-2 text-[10px] uppercase font-bold text-muted-foreground/70 tracking-widest">
+                      {problem.topics.map(topic => (
+                        <span
+                          key={topic}
+                          className="hover:text-primary transition-colors"
+                        >
+                          {topic}
+                        </span>
+                      ))}
                     </div>
                     <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground line-clamp-2">
                       {problem.description}
@@ -170,15 +248,128 @@ export default function Problem() {
 
                 <Button
                   variant="ghost"
-                  className="gap-2 transition-all shrink-0 text-emerald-600 dark:text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-500/10 group-hover:translate-x-1"
+                  size="sm"
+                  className="gap-2 transition-all p-0 h-9 w-9 rounded-full hover:bg-primary/10 hover:text-primary shrink-0"
                   onClick={() => navigate(`/problem/${problem.id}`)}
                 >
-                  {t("pages.problemsPage.action.solve")}
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                  <span className="sr-only">
+                    {t("pages.problemsPage.action.solve")}
+                  </span>
                 </Button>
               </div>
             </Card>
           ))}
+        </div>
+      ) : (
+        <Card className="overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm shadow-sm">
+          <Table>
+            <TableHeader className="bg-muted/50">
+              <TableRow>
+                <TableHead className="w-[80px]">Status</TableHead>
+                <TableHead className="min-w-[200px]">Title</TableHead>
+                <TableHead>Difficulty</TableHead>
+                <TableHead className="hidden md:table-cell">Category</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {problems.map(problem => (
+                <TableRow
+                  key={problem.id}
+                  className="transition-colors cursor-pointer hover:bg-muted/50"
+                  onClick={() => navigate(`/problem/${problem.id}`)}
+                >
+                  <TableCell>
+                    <div className="w-2 h-2 rounded-full bg-muted/40" />
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex flex-col">
+                      <span>{problem.title}</span>
+                      <div className="flex md:hidden gap-1 mt-1">
+                        {problem.topics.slice(0, 2).map(t => (
+                          <span
+                            key={t}
+                            className="text-[9px] text-muted-foreground"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "border-0 px-2 py-0 text-[10px] font-bold uppercase tracking-wider",
+                        getDifficultyColor(problem.difficulty)
+                      )}
+                    >
+                      {getDifficultyLabel(problem.difficulty)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex gap-2">
+                      {problem.topics.slice(0, 3).map(topic => (
+                        <span
+                          key={topic}
+                          className="text-[10px] text-muted-foreground px-1.5 py-0.5 rounded-md bg-muted/30"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 gap-1.5 text-xs text-primary font-bold"
+                    >
+                      {t("pages.problemsPage.action.solve")}
+                      <ChevronRight size={14} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
+
+      {/* Pagination - Using Config from app.config.ts */}
+      <div className="flex items-center justify-between px-2 py-4 border-t border-border/40">
+        <div className="text-sm text-muted-foreground">
+          Showing <span className="font-medium">1</span> to{" "}
+          <span className="font-medium">{problems.length}</span> of{" "}
+          <span className="font-medium">{problems.length}</span> results
+        </div>
+        <div className="flex items-center gap-6 lg:gap-8">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium">Rows per page</p>
+            <select
+              className="h-8 w-[70px] rounded-md border border-input bg-transparent px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
+              defaultValue={APP_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE}
+            >
+              {APP_CONFIG.PAGINATION.PAGE_SIZE_OPTIONS.map(option => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+            Page 1 of 1
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" className="h-8 w-8" disabled>
+              <ChevronRight className="w-4 h-4 rotate-180" />
+            </Button>
+            <Button variant="outline" size="icon" className="h-8 w-8" disabled>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

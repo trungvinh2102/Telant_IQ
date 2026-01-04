@@ -17,7 +17,11 @@ export const APP_CONFIG = {
   AUTH_TOKEN_KEY: "token",
   REFRESH_TOKEN_KEY: "refresh_token",
   PAGINATION: {
-    DEFAULT_PAGE_SIZE: 25,
-    PAGE_SIZE_OPTIONS: [25, 50, 100, 250, 500],
+    DEFAULT_PAGE_SIZE: 10,
+    PAGE_SIZE_OPTIONS: [10, 20, 50, 100],
+  },
+  TABLE: {
+    DEFAULT_SORT_ORDER: "desc",
+    EMPTY_ROW_HEIGHT: 52,
   },
 } as const;
