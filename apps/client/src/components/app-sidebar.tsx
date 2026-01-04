@@ -4,6 +4,7 @@ import { ArrowUpCircleIcon } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { NAV_ITEMS } from "@/routes/constants";
+import { useAppSelector } from "@/store/hooks";
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +16,8 @@ import {
 } from "@/components/ui/sidebar";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAppSelector(state => state.auth);
+
   return (
     <Sidebar collapsible="offcanvas" variant="inset" {...props}>
       <SidebarHeader>
@@ -38,9 +41,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavUser
           user={{
-            name: "User",
-            email: "user@example.com",
-            avatar: "/avatars/user.jpg",
+            firstName: user?.first_name,
+            lastName: user?.last_name,
+            username: user?.username || "User",
+            email: user?.email || "",
+            avatar: user?.avatar_url || "/avatars/user.jpg",
           }}
         />
       </SidebarFooter>

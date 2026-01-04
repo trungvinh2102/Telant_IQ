@@ -24,17 +24,47 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { logout as logoutAction } from "@/store/authSlice";
+import { authService } from "@/services";
+
 export function NavUser({
   user,
 }: {
   user: {
-    name: string;
+    firstName?: string;
+    lastName?: string;
+    username: string;
     email: string;
     avatar: string;
   };
 }) {
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const fullName =
+    user.firstName || user.lastName
+      ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+      : user.username;
+
+  const initials = (
+    user.firstName?.charAt(0) || user.username.charAt(0)
+  ).toUpperCase();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      dispatch(logoutAction());
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      dispatch(logoutAction());
+      navigate("/login");
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -45,13 +75,15 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <Avatar className="w-8 h-8 rounded-lg grayscale">
+                <AvatarImage src={user.avatar} alt={fullName} />
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
+              <div className="grid flex-1 text-sm leading-tight text-left">
+                <span className="font-medium truncate">{fullName}</span>
+                <span className="text-xs truncate text-muted-foreground">
                   {user.email}
                 </span>
               </div>
@@ -66,13 +98,15 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <Avatar className="w-8 h-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={fullName} />
+                  <AvatarFallback className="rounded-lg">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
+                <div className="grid flex-1 text-sm leading-tight text-left">
+                  <span className="font-medium truncate">{fullName}</span>
+                  <span className="text-xs truncate text-muted-foreground">
                     {user.email}
                   </span>
                 </div>
@@ -94,7 +128,10 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive focus:text-destructive"
+            >
               <LogOutIcon />
               {t("nav.logOut")}
             </DropdownMenuItem>
