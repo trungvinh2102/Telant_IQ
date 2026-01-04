@@ -10,8 +10,7 @@ export interface User {
   last_name?: string;
   name?: string; // Virtual or concatenated name
   avatar_url?: string;
-  roles?: string[]; // Multiple roles supported now
-  role?: "admin" | "user"; // Kept for compatibility if needed
+  role?: string;
   created_at?: string;
   updated_at?: string;
 }

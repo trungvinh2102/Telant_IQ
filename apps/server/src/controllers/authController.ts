@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import * as UserModel from "../models/User";
+import * as RoleModel from "../models/Role";
 import { AuthRequest } from "../types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "talent_iq_secret_key";
@@ -26,11 +27,18 @@ export const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
+    // Get default role (e.g., 'user')
+    const userRole = await RoleModel.findRoleByName("user");
+    if (!userRole) {
+      console.error("[server] ❌ 'user' role not found in database");
+    }
+
     // Create user
     const user = await UserModel.createUser({
       username,
       email,
       password_hash,
+      role_id: userRole?.id,
     });
 
     // Generate token
@@ -53,6 +61,7 @@ export const register = async (req: Request, res: Response) => {
         username: user.username,
         email: user.email,
         avatar_url: user.avatar_url,
+        role: userRole?.name || "user",
       },
     });
   } catch (error) {
@@ -98,6 +107,7 @@ export const login = async (req: Request, res: Response) => {
         username: user.username,
         email: user.email,
         avatar_url: user.avatar_url,
+        role: user.role_name,
       },
     });
   } catch (error) {
@@ -124,6 +134,7 @@ export const getMe = async (req: AuthRequest, res: Response) => {
         username: user.username,
         email: user.email,
         avatar_url: user.avatar_url,
+        role: user.role_name,
       },
     });
   } catch (error) {
