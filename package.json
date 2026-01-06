@@ -18,7 +18,10 @@
     "docker:build": "docker-compose build",
     "db:up": "docker-compose up -d postgres",
     "db:down": "docker-compose down postgres",
-    "db:logs": "docker-compose logs -f postgres"
+    "db:logs": "docker-compose logs -f postgres",
+    "check:client": "yarn workspace client lint && yarn workspace client build",
+    "check:server": "yarn workspace server lint && yarn workspace server build",
+    "check:all": "yarn check:client && yarn check:server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

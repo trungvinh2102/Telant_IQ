@@ -53,7 +53,10 @@ export class AuthService {
    * Get current user info
    */
   async getCurrentUser(): Promise<AuthResponse["user"]> {
-    return apiClient.get<AuthResponse["user"]>(API_CONFIG.ENDPOINTS.AUTH.ME);
+    const response = await apiClient.get<{ user: AuthResponse["user"] }>(
+      API_CONFIG.ENDPOINTS.AUTH.ME
+    );
+    return response.user;
   }
 }
 

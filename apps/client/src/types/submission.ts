@@ -21,7 +21,7 @@ export interface Submission {
 }
 
 export interface SubmissionRequest {
-  problem_id: number;
+  problem_id: string;
   language: string;
   code: string;
 }

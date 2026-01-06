@@ -22,7 +22,7 @@ export const ROUTES = [
     component: lazy(() => import("@/pages/Problems")),
   },
   {
-    path: "/problem/:id",
+    path: "/problem/:slug",
     title: "Problem Detail",
     component: lazy(() => import("@/pages/ProblemDetail")),
   },

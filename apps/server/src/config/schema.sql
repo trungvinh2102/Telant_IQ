@@ -44,9 +44,14 @@ CREATE TABLE IF NOT EXISTS problems (
     difficulty VARCHAR(20) CHECK (difficulty IN ('easy', 'medium', 'hard')),
     tags TEXT[],
     skeleton_code JSONB, -- Stores boilerplate for different languages
+    created_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Ensure created_by exists in problems table
+ALTER TABLE problems ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES users(id) ON DELETE SET NULL;
+
 
 -- Test Cases Table
 CREATE TABLE IF NOT EXISTS test_cases (

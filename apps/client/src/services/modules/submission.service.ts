@@ -23,8 +23,10 @@ export class SubmissionService {
   /**
    * Create new submission (run code)
    */
-  async createSubmission(submission: SubmissionRequest): Promise<Submission> {
-    return apiClient.post<Submission>(
+  async createSubmission(
+    submission: SubmissionRequest & { isRun?: boolean; testInput?: string }
+  ): Promise<Submission & { output?: string; error?: string }> {
+    return apiClient.post<Submission & { output?: string; error?: string }>(
       API_CONFIG.ENDPOINTS.SUBMISSIONS.CREATE,
       submission
     );
