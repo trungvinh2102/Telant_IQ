@@ -25,3 +25,21 @@ export interface SubmissionRequest {
   language: string;
   code: string;
 }
+
+export type ExecutionStatus =
+  | "idle"
+  | "running"
+  | "submitting"
+  | "accepted"
+  | "wrong_answer"
+  | "runtime_error"
+  | "time_limit_exceeded"
+  | "compile_error"
+  | "internal_error";
+
+export interface SubmissionResult {
+  status: ExecutionStatus;
+  message?: string;
+  error?: string;
+  output?: string;
+}

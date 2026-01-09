@@ -121,6 +121,40 @@ export default {
     problemDetail: {
       title: "Bài tập",
       description: "Chi tiết bài tập và giải pháp",
+      // Actions
+      runCode: "Chạy Code",
+      submit: "Nộp bài",
+      resetCode: "Khôi phục mặc định",
+      // Tabs
+      output: "Kết quả",
+      testCases: "Test Cases",
+      // Test Cases
+      case: "Case",
+      addTestCase: "Thêm Test Case",
+      deleteTestCase: "Xóa",
+      input: "Đầu vào",
+      expectedOutput: "Kết quả mong đợi",
+      customTestCase: "Tùy chỉnh",
+      // Status Messages
+      executing: "Đang chạy...",
+      evaluating: "Đang đánh giá...",
+      accepted: "Chấp nhận",
+      wrongAnswer: "Sai kết quả",
+      runtimeError: "Lỗi runtime",
+      timeLimitExceeded: "Quá thời gian",
+      compileError: "Lỗi biên dịch",
+      internalError: "Lỗi hệ thống",
+      // Output Panel
+      consoleOutput: "Kết quả Console",
+      runToSeeOutput: "Nhấn 'Chạy Code' để xem kết quả...",
+      allTestsPassed: "Đã vượt qua tất cả test cases!",
+      testFailed: "Test thất bại",
+      expected: "Mong đợi",
+      actual: "Thực tế",
+      // Languages
+      javascript: "JavaScript",
+      typescript: "TypeScript",
+      python: "Python",
     },
     problemsPage: {
       header: {

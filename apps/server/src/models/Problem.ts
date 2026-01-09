@@ -15,6 +15,14 @@ export interface Problem {
   updated_at?: Date;
 }
 
+export interface TestCase {
+  id: string;
+  problem_id: string;
+  input: string;
+  expected_output: string;
+  is_hidden: boolean;
+}
+
 export const getAllProblems = async (): Promise<Problem[]> => {
   const query = `
     SELECT p.*, u.username as creator_name 
@@ -121,4 +129,12 @@ export const deleteProblem = async (id: string): Promise<boolean> => {
   const query = "DELETE FROM problems WHERE id = $1;";
   const result = await pool.query(query, [id]);
   return (result.rowCount ?? 0) > 0;
+};
+
+export const getTestCasesByProblemId = async (
+  problemId: string
+): Promise<TestCase[]> => {
+  const query = "SELECT * FROM test_cases WHERE problem_id = $1";
+  const { rows } = await pool.query(query, [problemId]);
+  return rows;
 };

@@ -121,6 +121,40 @@ export default {
     problemDetail: {
       title: "Problem",
       description: "Problem details and solution",
+      // Actions
+      runCode: "Run Code",
+      submit: "Submit",
+      resetCode: "Reset to Default",
+      // Tabs
+      output: "Output",
+      testCases: "Test Cases",
+      // Test Cases
+      case: "Case",
+      addTestCase: "Add Test Case",
+      deleteTestCase: "Delete",
+      input: "Input",
+      expectedOutput: "Expected Output",
+      customTestCase: "Custom",
+      // Status Messages
+      executing: "Executing...",
+      evaluating: "Evaluating...",
+      accepted: "Accepted",
+      wrongAnswer: "Wrong Answer",
+      runtimeError: "Runtime Error",
+      timeLimitExceeded: "Time Limit Exceeded",
+      compileError: "Compile Error",
+      internalError: "Internal Error",
+      // Output Panel
+      consoleOutput: "Console Output",
+      runToSeeOutput: "Click 'Run Code' to see output here...",
+      allTestsPassed: "All test cases passed!",
+      testFailed: "Test Failed",
+      expected: "Expected",
+      actual: "Actual",
+      // Languages
+      javascript: "JavaScript",
+      typescript: "TypeScript",
+      python: "Python",
     },
     problemsPage: {
       header: {
